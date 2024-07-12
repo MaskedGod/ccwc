@@ -1,4 +1,4 @@
-import os
+# import sys
 from argparse import ArgumentParser
 
 
@@ -8,8 +8,12 @@ def main():
         print(bytes_counter(args))
     elif args.l:
         print(lines_counter(args))
+    elif args.w:
+        print(words_counter(args))
+    elif args.c:
+        print(characters_counter(args)) 
     else:
-        parser.print_help()
+        print(lines_counter(args), words_counter(args), bytes_counter(args), sep=" ",)
 
 
 parser = ArgumentParser(
@@ -20,17 +24,37 @@ parser = ArgumentParser(
 parser.add_argument('filename')
 parser.add_argument("-b", action="store_true", help="Counts bytes in a file")
 parser.add_argument("-l", action="store_true", help="Counts lines in a file")
+parser.add_argument("-w", action="store_true", help="Counts words in a file")
+parser.add_argument("-c", action="store_true", help="Counts characters in a file")
 
 
 def bytes_counter(args):
-    result = os.path.getsize(args.filename)
+    result = 0
+    with open("test.txt", 'rb') as file:
+        result = len(file.read())
     return result
 
 def lines_counter(args):
     result = 0
-    with open(args.filename, 'r', encoding='UTF-8') as file:
+    with open(args.filename, 'r', encoding='utf-8') as file:
         for _ in file.readlines():
             result += 1
+    return result
+
+def words_counter(args):
+    result = 0
+    with open(args.filename, 'r', encoding='utf-8') as file:
+        for row in file.readlines():
+            words_amount = len(row.split())
+            result += words_amount
+    return result
+
+def characters_counter(args):
+    result = 0
+    with open(args.filename, 'r', encoding='utf-8') as file:
+        for row in file.read():
+            characters_amount = len(row)
+            result += characters_amount
     return result
 
 
